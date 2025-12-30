@@ -3,6 +3,7 @@ import AskAIButton from '@/components/AskAIButton';
 import NewNoteButton from '@/components/NewNoteButton';
 import NoteTextInput from '@/components/NoteTextInput';
 import { prisma } from '@/db/prisma';
+import { redirect } from 'next/navigation';
 
 type Props = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,7 +17,11 @@ async function HomePage({ searchParams }: Props) {
     ? noteIdParam![0] 
     : noteIdParam || "";
 
-    const note = await prisma.note.findUnique({
+      if (!user) {
+    redirect("/login");
+  }
+
+    const note = await prisma.note.findFirst({
       where: { id: noteId, authorId: user?.id },
     });
 
