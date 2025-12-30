@@ -49,7 +49,7 @@ function SidebarGroupContent({ notes }: Props) {
       <div  className="relative flex items-center">
         <SearchIcon className="absolute left-2 sixe-4" />
         <Input
-        className="bg-muted pl-8"
+        className="bg-white pl-8"
         placeholder="Search your notes..."
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
@@ -58,7 +58,7 @@ function SidebarGroupContent({ notes }: Props) {
 
       <SidebarMenu className="mt-4">
         {filteredNotes.map((note) => (
-          <SidebarMenuItem key={note.id} className="group/item">
+          <SidebarMenuItem key={note.id}>
             <SelectNoteButton note={note} />
 
             <DeleteNoteButton

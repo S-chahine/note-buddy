@@ -99,16 +99,16 @@ function AskAIButton({user}: Props) {
           <div className="mt-4 flex flex-col gap-8">
             {questions.map((question , index) => (
               <Fragment key={index}>
-                <p className="ml-auto max-w-[60%] rounded-md bg-muted px-2 py-1 text-sm text-muted-foreground">
+                <div className="ml-auto max-w-[60%] rounded-md bg-muted px-2 py-1 text-sm text-muted-foreground">
                   {question}
-                  </p>
-                  <p>
+                  </div>
+                  <div>
                     {responses[index] && (
                       <p className="bot-response text-sm text-muted-foreground"
                       dangerouslySetInnerHTML={{ __html: responses[index] }}
                       />
                     )}
-                    </p>
+                    </div>
               </Fragment>
             ))}
             {isPending && <p className="animate-pulse text-sm">Thinking...</p>}

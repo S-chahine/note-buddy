@@ -28,7 +28,7 @@ export default function RootLayout({
             <NoteProvider>
             <SidebarProvider>
               <AppSidebar />
-            <div className="flex min-h-screen w-full flex-col">
+            <div className="flex min-h-screen w-full flex-col bg-mesh">
               <Header />
               <main className="flex flex-1 flex-col px-4 pt-10 xl:px-8">
             {children}

@@ -18,7 +18,7 @@ async function Header() {
         <SidebarTrigger className="absolute left-1 top-1" />
         <Link href="/" className="flex gap-2 items-end" >
         <Image src="/NoteBuddy.png" height={60} width={60} alt={'logo'} priority/>
-        <h1 className="flex flex-col text-2xl font-semibold leading-6 pb-1">
+        <h1 className="flex flex-col text-secondary-foreground dark:text-secondary text-2xl font-semibold leading-6 pb-1">
             Note <span>Buddy</span>
         </h1>
         </Link>

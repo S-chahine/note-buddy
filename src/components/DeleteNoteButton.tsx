@@ -60,8 +60,8 @@ function DeleteNoteButton({ noteId, deleteNoteLocally }: Props) {
           <Trash2 />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
+      <AlertDialogContent className="bg-accent!">
+        <AlertDialogHeader >
           <AlertDialogTitle>Are you sure you want to delete this note?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your note from our servers.

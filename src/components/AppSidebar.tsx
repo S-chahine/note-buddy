@@ -29,9 +29,9 @@ async function AppSidebar()  {
     <Sidebar>
       <SidebarContent className="custom-scrollbar">
         <SidebarGroup>
-            <SidebarGroupLabel className="mb-2 mt-2 text-lg">
+            <SidebarGroupLabel className="mb-2 mt-2 text-lg text-secondary-foreground dark:text-secondary">
                 {user? (
-                    "Your Notes:"
+                    "My Notes:"
                 ) : (
                     <p>
                         <Link href="/login" className="underline">
