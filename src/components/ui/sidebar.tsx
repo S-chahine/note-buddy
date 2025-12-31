@@ -256,12 +256,16 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  asChild= false,
+  children,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & { asChild?: boolean }) {
   const { toggleSidebar } = useSidebar()
 
+  const Comp = asChild ? Slot : Button
+
   return (
-    <Button
+    <Comp
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
@@ -273,9 +277,15 @@ function SidebarTrigger({
       }}
       {...props}
     >
+      {asChild ? (
+        children
+      ) : (
+        <>
       <PanelLeftIcon />
       <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+         </>
+      )}
+    </Comp>
   )
 }
 

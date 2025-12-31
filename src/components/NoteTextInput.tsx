@@ -35,7 +35,7 @@ function NoteTextInput({ noteId, startingNoteText }: Props) {
   };
 
   return (
-<div className="w-4xl h-full rounded-2xl p-0 glow border-e-gray-800">
+<div className="w-full max-w-4xl h-full rounded-2xl p-0 glow border-e-gray-800">
     <Textarea
       value={noteText}
       onChange={handleUpdateNote}
