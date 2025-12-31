@@ -63,8 +63,9 @@ export async function updateSession(request: NextRequest) {
 
     if (user) {
       const { newestNoteId } = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/fetch-newest-note?userId=${user.id}`,
+        `/api/fetch-newest-note?userId=${user.id}`,
       ).then((res) => res.json());
+
 
       if (newestNoteId) {
         const url = request.nextUrl.clone();
@@ -72,7 +73,7 @@ export async function updateSession(request: NextRequest) {
         return NextResponse.redirect(url);
       } else {
         const { noteId } = await fetch(
-          `${process.env.NEXT_PUBLIC_BASE_URL}/api/create-new-note?userId=${user.id}`,
+          `api/create-new-note?userId=${user.id}`,
           {
             method: "POST",
             headers: {
