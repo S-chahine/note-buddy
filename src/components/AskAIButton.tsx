@@ -60,7 +60,10 @@ function AskAIButton({user}: Props) {
 
       const newQuestions = [...questions, questionText];
       setQuestions(newQuestions);
+
       setQuestionText("");
+        if (textareaRef.current) textareaRef.current.style.height = "auto";
+
       setTimeout(scrollToBottom, 100);
 
       startTransition(async () => {
@@ -84,7 +87,10 @@ function AskAIButton({user}: Props) {
  };
   return (
     <Dialog open={open} onOpenChange={handleOnOpenChange}>
-      <form>
+      <form onSubmit={(e) => {
+        e.preventDefault();
+        handleSubmit();
+      }}>
         <DialogTrigger asChild>
           <Button variant="secondary">Ask AI</Button>
         </DialogTrigger>
@@ -120,6 +126,7 @@ function AskAIButton({user}: Props) {
             <Textarea 
             ref={textareaRef}
             placeholder="Ask me anything about your notes..."
+            value={questionText}
             className="resize-none rounded-none border-none bg-transparent p-0 shadow-none
             placeholder:text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
             style={{
@@ -131,7 +138,11 @@ function AskAIButton({user}: Props) {
             onKeyDown={handleKeyDown}
             onChange={(e) => setQuestionText(e.target.value)}
             />
-            <Button className="ml-auto size-8 rounded-full">
+            <Button 
+            className="ml-auto size-8 rounded-full"
+            type="submit"
+            disabled={isPending}
+            >
               <ArrowUpIcon className="text-background"/>
             </Button>
             </div>
