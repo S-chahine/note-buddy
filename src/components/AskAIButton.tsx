@@ -94,7 +94,7 @@ function AskAIButton({user}: Props) {
         <DialogTrigger asChild>
           <Button variant="secondary">Ask AI</Button>
         </DialogTrigger>
-        <DialogContent className="custom-scrollbar flex h-[85vh max-w-4xl flex-col overflow-auto"
+        <DialogContent className="custom-scrollbar flex h-[85vh] max-w-4xl flex-col"
            ref={contentRef}>
           <DialogHeader>
             <DialogTitle>Ask AI About Your Notes</DialogTitle>
@@ -102,10 +102,10 @@ function AskAIButton({user}: Props) {
               Our AI can answer questions about all your notes
             </DialogDescription>
           </DialogHeader>
-          <div className="mt-4 flex flex-col gap-8">
+          <div className="mt-4 flex flex-col gap-8 flex-1 overflow-auto">
             {questions.map((question , index) => (
               <Fragment key={index}>
-                <div className="ml-auto max-w-[60%] rounded-md bg-muted px-2 py-1 text-sm text-muted-foreground">
+                <div className="mt-auto max-w-[60%] rounded-md bg-muted px-2 py-1 text-sm text-muted-foreground">
                   {question}
                   </div>
                   <div>
@@ -120,7 +120,7 @@ function AskAIButton({user}: Props) {
             {isPending && <p className="animate-pulse text-sm">Thinking...</p>}
           </div>
           <div
-          className="mt-auto flex cursor-text flex-col rounded-lg border p-4"
+          className="flex cursor-text flex-col rounded-lg border p-4"
           onClick={handleClickInput}
           >
             <Textarea 
