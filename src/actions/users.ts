@@ -36,7 +36,10 @@ export const signUpAction = async (email: string, password: string) => {
         const { auth } = await createClient()
         const { data, error } = await auth.signUp({
             email,
-            password
+            password,
+            options: {
+                emailRedirectTo: "https://note-buddy-iota.vercel.app/login"
+            }
         });
         if (error) throw error;
 
@@ -55,3 +58,37 @@ export const signUpAction = async (email: string, password: string) => {
         return handleError(error);
     }
 }
+
+export const sendResetPasswordEmailAction = async (email: string) => {
+  try {
+    const { auth } = await createClient();
+
+    const { error } = await auth.resetPasswordForEmail(email, {
+      redirectTo: "https://note-buddy-iota.vercel.app/update-password"
+    });
+
+    if (error) throw error;
+
+    return { errorMessage: null };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const updatePasswordAction = async (password: string) => {
+  try {
+    const { auth } = await createClient();
+
+    const { error } = await auth.updateUser({
+      password,
+    });
+
+    if (error) throw error;
+
+    return { errorMessage: null };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+
