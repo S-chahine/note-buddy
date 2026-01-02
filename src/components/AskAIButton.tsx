@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { Fragment, useRef, useState, useTransition } from "react";
 import { Textarea } from "./ui/textarea";
 import { ArrowUpIcon } from "lucide-react";
+import sanitizeHtml from "sanitize-html";
 import { askAIAboutNotesAction } from "@/actions/notes";
 import "@/styles/ai-response.css";
 
@@ -116,9 +117,32 @@ function AskAIButton({ user }: Props) {
                 <div>
                   {responses[index] && (
                     <p
-                      className="bot-response text-muted-foreground text-sm"
-                      dangerouslySetInnerHTML={{ __html: responses[index] }}
-                    />
+  className="bot-response text-muted-foreground text-sm"
+  dangerouslySetInnerHTML={{
+    __html: sanitizeHtml(responses[index], {
+      allowedTags: [
+        "b",
+        "i",
+        "em",
+        "strong",
+        "u",
+        "p",
+        "br",
+        "ul",
+        "ol",
+        "li",
+        "code",
+        "pre",
+        "span"
+      ],
+      allowedAttributes: {
+        span: ["class"],
+        code: ["class"]
+      },
+      disallowedTagsMode: "discard"
+    }),
+  }}
+/>
                   )}
                 </div>
               </Fragment>

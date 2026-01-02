@@ -8,29 +8,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { updatePasswordSchema } from "@/lib/validation/authSchema";
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
+  const handleSubmit = (formData: FormData) => {
+    setErrors({});
     setSuccess(null);
 
-    if (password !== confirm) {
-      setError("Passwords do not match.");
-      return;
-    }
+  const result = updatePasswordSchema.safeParse({
+      password,
+      confirm,
+    });
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters.");
+  if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      result.error.issues.forEach((issue) => {
+        const field = issue.path[0] as string;
+        fieldErrors[field] = issue.message;
+      });
+
+      setErrors(fieldErrors);
       return;
     }
 
@@ -38,7 +44,7 @@ export default function UpdatePasswordPage() {
       const { errorMessage } = await updatePasswordAction(password);
 
       if (errorMessage) {
-        setError(errorMessage);
+        setErrors({password: errorMessage});
         return;
       }
 
@@ -57,7 +63,14 @@ export default function UpdatePasswordPage() {
             </CardTitle>
         </CardHeader>
 
-        <form onSubmit={handleSubmit}>
+        <form
+          noValidate
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            handleSubmit(formData);
+          }}
+        >
           <CardContent className="grid w-full items-center gap-4">
             <div className="flex flex-col gap-1.5">
               <Label>New password</Label>
@@ -67,6 +80,9 @@ export default function UpdatePasswordPage() {
                 disabled={isPending}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              {errors.password && (
+                <p className="text-sm text-red-400">{errors.password}</p>
+              )}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -77,10 +93,12 @@ export default function UpdatePasswordPage() {
                 disabled={isPending}
                 onChange={(e) => setConfirm(e.target.value)}
               />
+               {errors.confirm && (
+                <p className="text-sm text-red-400">{errors.confirm}</p>
+              )}
             </div>
 
-            {error && <p className="text-sm text-red-400">{error}</p>}
-            {success && <p className="text-sm text-green-600">{success}</p>}
+            {success && (<p className="text-sm text-green-600">{success}</p>)}
           </CardContent>
 
           <CardFooter>
