@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { updatePasswordAction } from "@/actions/users";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,9 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { updatePasswordSchema } from "@/lib/validation/authSchema";
+import { createClient } from "@/auth/client";
+
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
+  const supabase = createClient();
 
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -19,6 +22,15 @@ export default function UpdatePasswordPage() {
   const [success, setSuccess] = useState<string | null>(null);
 
   const [isPending, startTransition] = useTransition();
+
+    // STEP 1 — restore session from the URL
+  useEffect(() => {
+    async function run() {
+      await supabase.auth.exchangeCodeForSession(window.location.href);
+    }
+
+    run();
+  }, [supabase]);
 
   const handleSubmit = (formData: FormData) => {
     setErrors({});
@@ -41,12 +53,11 @@ export default function UpdatePasswordPage() {
     }
 
     startTransition(async () => {
-      const { errorMessage } = await updatePasswordAction(password);
+      const { error } = await supabase.auth.updateUser({ password });
 
-      if (errorMessage) {
-        setErrors({password: errorMessage});
-        return;
-      }
+      if (error) 
+        setErrors({password: error.message});
+      
 
       setSuccess("Password updated successfully. Redirecting…");
 
