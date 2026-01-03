@@ -39,24 +39,33 @@ export async function updateSession(request: NextRequest) {
     },
   );
 
-  const isAuthRoute =
-    request.nextUrl.pathname === "/login" ||
-    request.nextUrl.pathname === "/sign-up" ||
-    request.nextUrl.pathname === "/reset-password" ||
-    request.nextUrl.pathname === "/update-password";
+ const pathname = request.nextUrl.pathname;
 
-  if (isAuthRoute) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (user) {
-      return NextResponse.redirect(
-        new URL("/", request.url),
-      );
-    }
+const redirectIfLoggedIn =
+  pathname === "/login" ||
+  pathname === "/sign-up";
+
+const resetRoutes =
+  pathname === "/reset-password" ||
+  pathname === "/update-password";
+
+// If user visits login/signup and is already logged in → redirect home
+if (redirectIfLoggedIn) {
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
+}
 
-  const { searchParams, pathname } = new URL(request.url);
+// IMPORTANT: reset routes must pass through untouched
+if (resetRoutes) {
+  return supabaseResponse;
+}
+
+  const { searchParams } = new URL(request.url);
 
   if (!searchParams.get("noteId") && pathname === "/") {
     const {
