@@ -3,14 +3,19 @@ export const dynamic = "force-dynamic";
 
 import { useEffect, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { updatePasswordSchema } from "@/lib/validation/authSchema";
 import { createClient } from "@/auth/client";
-
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
@@ -23,7 +28,7 @@ export default function UpdatePasswordPage() {
 
   const [isPending, startTransition] = useTransition();
 
-    // STEP 1 — restore session from the URL
+  // STEP 1 — restore session from the URL
   useEffect(() => {
     async function run() {
       await supabase.auth.exchangeCodeForSession(window.location.href);
@@ -36,12 +41,12 @@ export default function UpdatePasswordPage() {
     setErrors({});
     setSuccess(null);
 
-  const result = updatePasswordSchema.safeParse({
+    const result = updatePasswordSchema.safeParse({
       password,
       confirm,
     });
 
-  if (!result.success) {
+    if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
         const field = issue.path[0] as string;
@@ -55,13 +60,14 @@ export default function UpdatePasswordPage() {
     startTransition(async () => {
       const { error } = await supabase.auth.updateUser({ password });
 
-      if (error) 
-        setErrors({password: error.message});
-      
+      if (error) setErrors({ password: error.message });
 
       setSuccess("Password updated successfully. Redirecting…");
 
-      setTimeout(() => router.push("/login"), 1500);
+      // refresh session
+      await supabase.auth.getSession();
+
+      setTimeout(() => router.push("/login"), 1000);
     });
   };
 
@@ -71,7 +77,7 @@ export default function UpdatePasswordPage() {
         <CardHeader className="mb-4">
           <CardTitle className="text-center text-3xl">
             Reset your password
-            </CardTitle>
+          </CardTitle>
         </CardHeader>
 
         <form
@@ -104,17 +110,21 @@ export default function UpdatePasswordPage() {
                 disabled={isPending}
                 onChange={(e) => setConfirm(e.target.value)}
               />
-               {errors.confirm && (
+              {errors.confirm && (
                 <p className="text-sm text-red-400">{errors.confirm}</p>
               )}
             </div>
 
-            {success && (<p className="text-sm text-green-600">{success}</p>)}
+            {success && <p className="text-sm text-green-600">{success}</p>}
           </CardContent>
 
           <CardFooter>
-            <Button className="w-full mt-6" disabled={isPending}>
-              {isPending ? <Loader2 className="animate-spin" /> : "Update Password"}
+            <Button className="mt-6 w-full" disabled={isPending}>
+              {isPending ? (
+                <Loader2 className="animate-spin" />
+              ) : (
+                "Update Password"
+              )}
             </Button>
           </CardFooter>
         </form>
