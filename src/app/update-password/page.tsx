@@ -1,7 +1,7 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 import { useEffect, useState, useTransition } from "react";
-import { updatePasswordAction } from "@/actions/users";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
