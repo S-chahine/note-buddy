@@ -16,7 +16,6 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { updatePasswordSchema } from "@/lib/validation/authSchema";
 import { createClient } from "@/auth/client";
-import { revalidatePath } from "next/cache";
 
 export default function UpdatePasswordPage() {
   const router = useRouter();
@@ -66,7 +65,7 @@ export default function UpdatePasswordPage() {
       setSuccess("Password updated successfully. Redirecting…");
 
       // refresh 
-      revalidatePath("/");
+      router.refresh();
 
       setTimeout(() => router.push("/login"), 1000);
     });
